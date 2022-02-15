@@ -24,7 +24,6 @@ def break_wordle():
     # Parse Arguements 
     args = parser.parse_args()
 
-
     verbose = args.verbose
     if verbose:
         print("Arguments")
@@ -64,7 +63,10 @@ def break_wordle():
         else:
             unfinished_regex.append("[{}]".format(c))
 
+    # Create simple regex
     wordle_regex = "".join([j for j in unfinished_regex])
+
+    # Sanity check that regex was created before continuing
     if(wordle_regex): 
         if args.verbose: print("[REGEX]: {}\n".format(wordle_regex))
     else:
@@ -78,22 +80,27 @@ def break_wordle():
             if (re.findall(wordle_regex, line)):
                 possible_words.append(line)
 
+    words_excluded = 0
     excludes_parsed = []
     # If passed chars to exclude, filter the words 
-    words_excluded = 0
     if args.exclude:
         for word in possible_words:
+            # Iterate through all words counting any excludes
             word_has_excludes = 0
 
+            # Iterate through each char in word comparing to excludes
             for char in word:
                 for exclude in args.exclude:
                     if char == exclude:
                         word_has_excludes += 1 
+            
+            # Only add words to list without excludes
             if word_has_excludes == 0: 
                 excludes_parsed.append(word)
             else:
                 words_excluded += 1
 
+        # Update list of possible words
         possible_words = excludes_parsed
         
     includes_parsed = []
@@ -116,33 +123,31 @@ def break_wordle():
         # Update the list of possible words
         possible_words = includes_parsed
 
-
     # Sort the list
     possible_words.sort()
 
-    # If there is a result echo it out or write to file
+    # If there is only one result, only echo do not print
     if len(possible_words) == 1:
         for line in possible_words:
             print("The Solution is:\n\n{}".format(line))
             sys.exit()
 
-
+    # If there is a result echo it out or write to file
     if len(possible_words) != 0:
         
         if args.write:
-            print("Found: {}".format(len(possible_words)))
             with open("./possible_words.txt", "w") as wf:
                 for word in possible_words:
                     wf.write(word)
         else:
             [print(i, end="") for i in possible_words]
 
-            
             if verbose:
                 print("Number of words excluded: {}".format(words_excluded))
 
-            print("Found: {}".format(len(possible_words)))
+        print("Found: {}".format(len(possible_words)))
             
+    # Else there are no words, double check your inputs
     else:
         print("No Results")
 
