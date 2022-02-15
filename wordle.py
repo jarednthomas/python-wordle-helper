@@ -140,12 +140,13 @@ def break_wordle():
                 for word in possible_words:
                     wf.write(word)
         else:
+            print("Possible Solutions:\n")
             [print(i, end="") for i in possible_words]
 
             if verbose:
                 print("Number of words excluded: {}".format(words_excluded))
 
-        print("Found: {}".format(len(possible_words)))
+        print("\nFound: {}".format(len(possible_words)))
             
     # Else there are no words, double check your inputs
     else:
