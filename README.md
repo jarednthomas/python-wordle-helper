@@ -40,3 +40,14 @@ python wordle.py '##Z##' -i aw -e e
 With the above example, the program would exit, printing out the only word that matches the regex and filters: wazoo. 
 
 Without a single solution, the program will return a list of possible words that match the expression and filters. Double check your arguments if you get no results!
+
+
+# Limitations
+
+Say you have an `s` in the word for sure, but you guessed a second `s` on the next try and that's for sure not in the word, so you try to add it to the exclusions:
+
+```
+python wordle.py 'S####' -e s
+```
+
+The program breaks and returns nothing, or worse. I'm working on it; I threw together a smaller version of this together in a rush, and this longer version is still pretty rough.
